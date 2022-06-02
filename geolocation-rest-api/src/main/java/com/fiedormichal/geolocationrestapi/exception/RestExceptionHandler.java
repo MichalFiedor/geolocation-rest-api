@@ -36,7 +36,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                                                         WebRequest request) {
         List<String> errors = new ArrayList<>();
         errors.add(ex.getMessage());
-
         return buildResponseEntity(getApiError(errors, HttpStatus.BAD_REQUEST, MISMATCH_TYPE.getValue()));
     }
 
@@ -51,7 +50,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 .stream()
                 .map(error -> error.getObjectName() + " : " + error.getDefaultMessage())
                 .collect(Collectors.toList());
-
         return buildResponseEntity(getApiError(errors, HttpStatus.BAD_REQUEST, VALIDATION_ERRORS.getValue()));
     }
 
@@ -70,7 +68,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                                                                      HttpHeaders headers,
                                                                      HttpStatus status,
                                                                      WebRequest request) {
-
         List<String> errors = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
         builder.append(ex.getContentType());
@@ -91,7 +88,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(getApiError(errors, HttpStatus.NOT_FOUND, METHOD_NOT_FOUND.getValue()));
     }
 
-    @ExceptionHandler(JsonParseException.class)
+    @ExceptionHandler(value = {JsonParseException.class})
     protected ResponseEntity<Object> handleJsonParseException(JsonParseException ex){
         List<String> errors = new ArrayList<>();
         errors.add(ex.getMessage());
@@ -99,7 +96,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
     protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex){
         List<String> errors = new ArrayList<>();
         errors.add(ex.getMessage());
@@ -107,14 +104,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(getApiError(errors, HttpStatus.BAD_REQUEST, METHOD_ARGUMENT_MISMATCH.getValue()));
     }
 
-    @ExceptionHandler(DeviceNotExistsException.class)
+    @ExceptionHandler(value = {DeviceNotExistsException.class})
     protected ResponseEntity<Object> handleDeviceNotExists(DeviceNotExistsException ex){
         List<String> errors = new ArrayList<>();
         errors.add(ex.getMessage());
-        return buildResponseEntity(getApiError(errors, HttpStatus.NO_CONTENT, DEVICE_NOT_EXISTS.getValue()));
+        return buildResponseEntity(getApiError(errors, HttpStatus.BAD_REQUEST, DEVICE_NOT_EXISTS.getValue()));
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(value = {Exception.class})
     protected ResponseEntity<?> handleAll(Exception ex) {
         List<String> errors = new ArrayList<>();
         errors.add(ex.getLocalizedMessage());
